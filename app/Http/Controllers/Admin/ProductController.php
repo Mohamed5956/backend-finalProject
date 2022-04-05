@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\Category;
 use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
+use App\Http\Controllers\Api\ApiResponseTrait;
 
 class ProductController extends Controller
 {
+    use ApiResponseTrait;
+
     /**
      * Display a listing of the resource.
      *
@@ -17,10 +20,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-
         $products = Product::with('category')->get();
-        // dd($products);
-        return view('admin.product.index', ['products' => $products]);
+        return $this->apiResponse($products,'DONE', 200);
     }
 
     /**
@@ -31,7 +32,7 @@ class ProductController extends Controller
     public function create()
     {
         $category = Category::all();
-        return view('admin.product.add', ['category' => $category]);
+        return $this->apiResponse($category,'DONE', 200);
     }
 
     /**
@@ -57,16 +58,12 @@ class ProductController extends Controller
         $products->description = $request->input('description');
         $products->original_price = $request->input('original_price');
         $products->selling_price = $request->input('selling_price');
-        $products->tax = $request->input('tax');
         $products->quantity = $request->input('quantity');
         $products->status = $request->input('status') == TRUE ? '1' : '0';
         $products->trending = $request->input('trending') == TRUE ? '1' : '0';
-        $products->meta_title = $request->input('meta_title');
-        $products->meta_keywords = $request->input('meta_keywords');
-        $products->meta_desc = $request->input('meta_desc');
         $products->save();
 
-        return redirect('products')->with('status', 'product Added Succesfully');
+        return $this->apiResponse($products,'DONE', 200);
     }
 
     /**
@@ -77,7 +74,8 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        //
+        $product = Product::find($id);
+        return $this->apiResponse($product,'DONE', 200);
     }
 
     /**
@@ -89,7 +87,7 @@ class ProductController extends Controller
     public function edit($id)
     {
         $product = Product::find($id);
-        return view('admin.product.edit', ['product' => $product]);
+        return $this->apiResponse($product,'DONE', 200);
     }
 
     /**
@@ -102,7 +100,6 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         $product = Product::find($id);
-
 
         if ($request->hasFile('image')) {
 
@@ -126,15 +123,11 @@ class ProductController extends Controller
         $product->description = $request->input('description');
         $product->original_price = $request->input('original_price');
         $product->selling_price = $request->input('selling_price');
-        $product->tax = $request->input('tax');
         $product->quantity = $request->input('quantity');
         $product->status = $request->input('status') == TRUE ? '1' : '0';
         $product->trending = $request->input('trending') == TRUE ? '1' : '0';
-        $product->meta_title = $request->input('meta_title');
-        $product->meta_keywords = $request->input('meta_keywords');
-        $product->meta_desc = $request->input('meta_desc');
         $product->update();
-        return redirect ('/products')->with('status','Product Updated succesfully');
+        return $this->apiResponse($product,'DONE', 200);
     }
 
     /**
@@ -153,6 +146,6 @@ class ProductController extends Controller
             }
         }
         $product->delete();
-        return redirect ('/products')->with('status','Product Deleted Succesfully');
+        return $this->apiResponse(null,'DONE', 200);
     }
 }

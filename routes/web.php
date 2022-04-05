@@ -70,7 +70,7 @@ Route::middleware('can:isUser')->group(function(){
 Route::middleware('can:isAdmin')->group(function(){
     Route::get('/dashboard',[FrontendController::class,'index']);
     // Route::resource('/categories',CategoryController::class);
-    Route::resource('/products',ProductController::class);
+    // Route::resource('/products',ProductController::class);
     Route::resource('orders',OrderController::class);
     Route::get('order-history',[OrderController::class,'orderhistory']);
     Route::get('users',[DashboardController::class,'users']);

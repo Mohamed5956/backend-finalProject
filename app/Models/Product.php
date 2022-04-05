@@ -22,12 +22,8 @@ class Product extends Model
         'selling_price',
         'image',
         'quantity',
-        'tax',
         'status',
         'trending',
-        'meta_title',
-        'meta_keywords',
-        'meta_desc'
     ];
 
     public function category()
