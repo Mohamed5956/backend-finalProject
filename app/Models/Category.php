@@ -15,12 +15,7 @@ class Category extends Model
         'name',
         'slug',
         'description',
-        'status',
-        'popular',
         'image',
-        'meta_title',
-        'meta_desc',
-        'meta_keywords',
     ];
 
     function product(){

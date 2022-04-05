@@ -6,6 +6,7 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
+use App\Http\Controllers\Api\ApiResponseTrait;
 
 class CategoryController extends Controller
 {
@@ -14,10 +15,18 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    //use trait
+    use ApiResponseTrait;
+
     public function index()
     {
         $category = Category::all();
-        return view('admin.category.index' , ["data"=>$category]);
+        if($category){
+            return $this->apiResponse($category,'DONE', 200);
+        }else{
+            return $this->apiResponse(null,'Error', 404);
+        }
     }
 
     /**
@@ -50,14 +59,9 @@ class CategoryController extends Controller
         $category->name = $request->input('name');
         $category->slug = $request->input('slug');
         $category->description = $request->input('description');
-        $category->status = $request->input('status') == TRUE? '1' : '0';
-        $category->popular = $request->input('popular') == TRUE? '1' : '0';
-        $category->meta_title = $request->input('meta_title');
-        $category->meta_keywords = $request->input('meta_keywords');
-        $category->meta_desc = $request->input('meta_desc');
         $category->save();
 
-        return redirect ('/categories')->with('status','Category Added Succesfully');
+        return $this->apiResponse($category,'DONE', 200);
 
     }
 
@@ -69,7 +73,8 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
-        //
+        $category = Category::find($id);
+        return $this->apiResponse($category,'DONE', 200);
     }
 
     /**
@@ -81,7 +86,7 @@ class CategoryController extends Controller
     public function edit($id)
     {
         $category = Category::find($id);
-        return view('admin.category.edit',['category'=>$category]);
+        return $this->apiResponse($category,'DONE', 200);
     }
 
     /**
@@ -109,14 +114,9 @@ class CategoryController extends Controller
         $category->name = $request->input('name');
         $category->slug = $request->input('slug');
         $category->description = $request->input('description');
-        $category->status = $request->input('status') == TRUE? '1' : '0';
-        $category->popular = $request->input('popular') == TRUE? '1' : '0';
-        $category->meta_title = $request->input('meta_title');
-        $category->meta_keywords = $request->input('meta_keywords');
-        $category->meta_desc = $request->input('meta_desc');
         $category->update();
 
-        return redirect ('/categories')->with('status','Category Updated Succesfully');
+        return $this->apiResponse($category,'DONE', 200);
     }
 
     /**
@@ -135,6 +135,6 @@ class CategoryController extends Controller
             }
         }
         $category->delete();
-        return redirect ('/categories')->with('status','Category Deleted Succesfully');
+        return $this->apiResponse(null,'DONE', 200);
     }
 }
